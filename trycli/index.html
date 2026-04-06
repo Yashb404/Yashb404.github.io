@@ -1,213 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TryCli Studio | PBL Presentation 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
-        
-        body { 
-            background-color: #09090b; /* TryCli bg-dark */
-            color: #e4e4e7; /* TryCli text-main */
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            scroll-behavior: smooth; 
-            overflow-x: hidden;
-        }
-        
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        
-        /* Glassmorphism matched to TryCli */
-        .glass { 
-            background: linear-gradient(180deg, #18181b 0%, rgba(24, 24, 27, 0.6) 100%);
-            backdrop-filter: blur(12px); 
-            border: 1px solid #27272a; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        
-        .gradient-text { 
-            background: linear-gradient(to right, #ffffff, #9ca3af);
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-        
-        /* TIMER UI */
-       
-        @keyframes flicker { 0%, 100% { background-color: #ffffff; } 50% { background-color: #fca5a5; } }
-       
-    </style>
-</head>
-
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimuCli | Interactive CLI Demo Platform</title>
   
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-    <nav class="fixed w-full z-50 glass border-b border-zinc-800 px-8 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <div class="bg-zinc-900 p-1 rounded flex items-center justify-center border border-zinc-700" style="height: 48px; width: 48px;">
-                <i class="fas fa-terminal text-white text-xl"></i>
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xl font-black text-white leading-none uppercase tracking-tighter">TryCli <span class="text-zinc-500 italic">Studio</span></span>
-                <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Dept. of Computer Science</span>
-            </div>
-        </div>
-        <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-bold opacity-70">
-            <a href="#problem" class="hover:text-white transition">Problem</a>
-            <a href="#methodology" class="hover:text-white transition">Stack</a>
-            <a href="#results" class="hover:text-white transition">Results</a>
-            <a href="#team" class="hover:text-white transition">Team</a>
-        </div>
-    </nav>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827cc;
+      --line: #334155;
+      --text: #e2e8f0;
+      --brand: #22d3ee;
+      --brand-2: #f59e0b;
+    }
 
-    <main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+    
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 18%, #164e63 0%, transparent 38%),
+        radial-gradient(circle at 82% 10%, #4c1d95 0%, transparent 35%),
+        radial-gradient(circle at 50% 85%, #1e293b 0%, transparent 45%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .mono { font-family: "DM Mono", monospace; }
+
+    .glass {
+      background: linear-gradient(180deg, #0f172acc 0%, #0f172a8a 100%);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 35px rgba(2, 8, 23, 0.4);
+    }
+
+    .title-gradient {
+      background: linear-gradient(90deg, #ffffff 0%, #67e8f9 55%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dot-grid {
+      background-image: radial-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 700ms ease forwards;
+    }
+    .fade-up:nth-child(1) { animation-delay: 100ms; }
+    .fade-up:nth-child(2) { animation-delay: 200ms; }
+    .fade-up:nth-child(3) { animation-delay: 300ms; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-slate-700/80 glass">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-600 grid place-items-center">
+          <span class="mono text-cyan-300 text-lg">$</span>
+        </div>
+        <div>
+          <p class="font-bold text-xl leading-none">SimuCli</p>
+          <p class="mono text-[9px] tracking-[0.2em] uppercase text-slate-400 mt-1">Interactive CLI Demos</p>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-8 mono text-[11px] uppercase tracking-widest text-slate-300">
+        <a href="#problem" class="hover:text-cyan-300 transition">Problem</a>
+        <a href="#flow" class="hover:text-cyan-300 transition">Workflow</a>
+        <a href="#architecture" class="hover:text-cyan-300 transition">Architecture</a>
+        <a href="https://github.com/Yashb404/Simu-CLI" class="px-4 py-2 bg-slate-800 rounded-lg border border-slate-600 hover:border-cyan-400 transition">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-6 pt-32 pb-24 space-y-32">
+    
+    <section class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <div class="fade-up">
+          <span class="px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 mono text-[10px] uppercase tracking-widest">
+            Rust • WASM • Axum
+          </span>
+          <h1 class="text-6xl md:text-7xl font-bold leading-tight mt-6">
+            <span class="title-gradient">Build. Publish.</span><br />Embed.
+          </h1>
+        </div>
         
-        <section class="text-center">
-            <div class="inline-block px-4 py-1 border border-zinc-700 rounded-full text-zinc-400 text-[10px] font-mono mb-6 uppercase tracking-widest">
-                PBL SUBMISSION 2026
+        <p class="text-slate-300 text-lg leading-relaxed max-w-lg fade-up">
+          Author terminal walkthroughs, publish shareable demos, and embed them anywhere with a single script tag. Stop losing users to complex setup guides.
+        </p>
+
+        <div class="flex flex-wrap gap-4 fade-up">
+          <a href="#flow" class="px-8 py-4 rounded-xl bg-cyan-400 text-slate-900 font-bold hover:bg-cyan-300 transition shadow-lg shadow-cyan-500/20">
+            Get Started
+          </a>
+          <a href="#architecture" class="px-8 py-4 rounded-xl border border-slate-600 text-slate-100 hover:bg-slate-800 transition">
+            How it Works
+          </a>
+        </div>
+      </div>
+
+      <div class="glass rounded-3xl p-4 dot-grid fade-up shadow-2xl">
+        <div class="rounded-2xl border border-slate-600 overflow-hidden shadow-inner">
+          <div class="flex items-center gap-2 bg-slate-900/80 px-4 py-3 border-b border-slate-700">
+            <div class="flex gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
             </div>
-            <h1 class="text-6xl md:text-7xl font-extrabold mb-8 uppercase leading-tight">
-                <span class="gradient-text">TryCli Studio</span>
-            </h1>
-            <p class="text-zinc-400 max-w-2xl mx-auto italic text-lg leading-relaxed border-l-2 border-zinc-700 pl-6 text-left">
-                "Orchestrating ephemeral, browser-based Docker sandboxes to eliminate configuration drift and accelerate developer onboarding for CLI tools."
-            </p>
-        </section>
+            <span class="mono text-[11px] text-slate-500 ml-4">simucli-onboarding.sh</span>
+          </div>
+          <div class="p-6 bg-slate-950 mono text-sm leading-8 min-h-[240px]">
+            <p><span class="text-cyan-400">➜</span> <span class="text-slate-100">simucli create "deploy-demo"</span></p>
+            <p><span class="text-slate-400">?</span> Choose template: <span class="text-amber-400">NodeJS-App</span></p>
+            <p><span class="text-cyan-400">➜</span> <span class="text-slate-100">simucli publish --public</span></p>
+            <p class="text-emerald-400">✔ Demo live at: https://simu.cli/d/Xj82K</p>
+            <p class="text-slate-500 mt-4">// Copy-paste to embed:</p>
+            <p class="text-slate-400 break-all bg-slate-900 p-2 rounded">&lt;script src="simu.js" id="Xj82K"&gt;&lt;/script&gt;</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <section id="problem" class="grid md:grid-cols-2 gap-12 items-stretch">
-            <div class="glass p-10 rounded-[2.5rem] flex flex-col justify-center border-l-4 border-zinc-500">
-                <h2 class="text-3xl font-extrabold mb-6 text-white">The "npm install" Barrier</h2>
-                <p class="text-zinc-400 leading-relaxed text-justify">
-                    Developer adoption drops significantly during initial setup. Static documentation forces users to clone repos and resolve dependencies locally, leading to "works on my machine" errors. Existing solutions like Codespaces are too heavy for simple demos.
-                </p>
-            </div>
-            <div class="space-y-6">
-                <div class="glass p-7 rounded-3xl border-r-4 border-blue-500/50">
-                    <h3 class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-2">Market Gap</h3>
-                    <p class="text-sm text-zinc-500 italic">
-                        Current tools (Repl.it, StackBlitz) focus on full-stack web apps, lacking specialized support for raw terminal/CLI interactions and custom Linux binaries.
-                    </p>
-                </div>
-                <div class="glass p-7 rounded-3xl border-r-4 border-purple-500/50">
-                    <h3 class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-2">Our Innovation</h3>
-                    <p class="text-sm text-zinc-500 italic">
-                        Zero-config, ephemeral Docker snapshots spawned in < 500ms using a high-performance Rust orchestrator.
-                    </p>
-                </div>
-            </div>
-        </section>
+    <section id="problem" class="space-y-12">
+      <div class="text-center space-y-4">
+        <h2 class="text-4xl font-bold">Crush the "Time-to-Value" Gap</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Manual setup takes 15+ minutes. SimuCli demos take 70 seconds. See the impact on developer onboarding.</p>
+      </div>
 
-        <section id="methodology" class="space-y-12">
-            <h2 class="text-4xl font-black text-center uppercase tracking-tight text-white">Tech <span class="text-zinc-500">Stack</span></h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                
-                <div class="glass p-8 rounded-3xl text-center group hover:border-zinc-500 transition">
-                    <i class="fab fa-rust text-orange-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest text-white">Client (WASM)</h3>
-                    <p class="text-sm text-zinc-500">
-                        Built with <strong>Leptos</strong>. Compiles to WebAssembly for near-native performance. Features <strong>Xterm.js</strong> for rendering the TTY.
-                    </p>
-                </div>
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 glass rounded-[2rem] p-8">
+          <div class="h-[300px]">
+            <canvas id="impactChart"></canvas>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="glass rounded-2xl p-6 border-t-2 border-cyan-400">
+            <h4 class="mono text-xs text-slate-400 uppercase tracking-widest mb-2">Zero Dependencies</h4>
+            <p class="text-2xl font-bold">Browser Native</p>
+          </div>
+          <div class="glass rounded-2xl p-6 border-t-2 border-amber-400">
+            <h4 class="mono text-xs text-slate-400 uppercase tracking-widest mb-2">Core Engine</h4>
+            <p class="text-2xl font-bold">Rust + WASM</p>
+          </div>
+          <div class="glass rounded-2xl p-6 border-t-2 border-emerald-400">
+            <h4 class="mono text-xs text-slate-400 uppercase tracking-widest mb-2">Insights</h4>
+            <p class="text-2xl font-bold">Built-in Analytics</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-                <div class="glass p-8 rounded-3xl text-center group hover:border-zinc-500 transition">
-                    <i class="fas fa-server text-blue-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest text-white">Orchestrator</h3>
-                    <p class="text-sm text-zinc-500">
-                        <strong>Axum</strong> (Rust) backend managing <strong>Docker</strong> via the Bollard crate. Handles WebSocket streams for stdin/stdout.
-                    </p>
-                </div>
+    <section id="architecture" class="glass rounded-[3rem] p-12 space-y-12 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 blur-[100px]"></div>
+      
+      <div class="text-center">
+        <h2 class="text-4xl font-bold">The SimuCli Workspace</h2>
+        <p class="text-slate-400 mt-2">Modular Rust crates for scalability and performance.</p>
+      </div>
 
-                <div class="glass p-8 rounded-3xl text-center border-2 border-green-500/20 bg-green-500/5">
-                    <i class="fas fa-play text-green-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-green-400">Live Project</h3>
-                    <a href="https://trycli.com" target="_blank" class="px-6 py-2 bg-green-600 text-white rounded-full text-[10px] font-black hover:bg-green-500 transition shadow-lg shadow-green-900/40">
-                        LAUNCH STUDIO
-                    </a>
-                </div>
-            </div>
-        </section>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition group">
+          <span class="mono text-cyan-400 text-xs tracking-widest">CRATE: SERVER</span>
+          <h3 class="text-lg font-bold mt-2 group-hover:text-cyan-300">Axum Backend</h3>
+          <p class="text-slate-400 text-sm mt-3">Handles JWT auth, Postgres persistence, and high-performance API routing.</p>
+        </div>
+        <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700 hover:border-amber-500/50 transition group">
+          <span class="mono text-amber-400 text-xs tracking-widest">CRATE: APP</span>
+          <h3 class="text-lg font-bold mt-2 group-hover:text-amber-300">Leptos Dashboard</h3>
+          <p class="text-slate-400 text-sm mt-3">Reactive SSR dashboard for managing projects, versioning, and analytics.</p>
+        </div>
+        <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700 hover:border-emerald-500/50 transition group">
+          <span class="mono text-emerald-400 text-xs tracking-widest">CRATE: EMBED</span>
+          <h3 class="text-lg font-bold mt-2 group-hover:text-emerald-300">WASM Runtime</h3>
+          <p class="text-slate-400 text-sm mt-3">Lightweight terminal emulator that runs demo logic directly in the client.</p>
+        </div>
+        <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700 hover:border-slate-400 transition group">
+          <span class="mono text-slate-400 text-xs tracking-widest">CRATE: SHARED</span>
+          <h3 class="text-lg font-bold mt-2 group-hover:text-white">Domain Logic</h3>
+          <p class="text-slate-400 text-sm mt-3">Shared validation, DTOs, and types across the entire Rust workspace.</p>
+        </div>
+      </div>
+    </section>
 
-        <section id="results" class="glass p-12 rounded-[3.5rem] border-t-4 border-zinc-500">
-            <h2 class="text-3xl font-black mb-12 text-center uppercase tracking-tight text-white">Performance <span class="text-zinc-500">Analysis</span></h2>
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="h-80"><canvas id="resultsChart"></canvas></div>
-                <div class="space-y-6">
-                    <div class="p-6 rounded-2xl bg-white/5 flex justify-between items-center border border-white/10 shadow-inner">
-                        <span class="text-zinc-400 font-bold uppercase text-xs tracking-widest">Environment Startup</span>
-                        <span class="text-white font-mono font-black text-3xl">~300ms</span>
-                    </div>
-                    <div class="p-6 rounded-2xl bg-white/5 flex justify-between items-center border border-white/10 shadow-inner">
-                        <span class="text-zinc-400 font-bold uppercase text-xs tracking-widest">Memory Footprint</span>
-                        <span class="text-white font-mono font-black text-3xl">15MB</span>
-                    </div>
-                    <p class="text-zinc-500 text-sm italic text-justify leading-relaxed">
-                        Compared to traditional VM provisioning (30s+) or Node.js backends, the Rust + Docker snapshot architecture delivers instant interactive terminals with minimal resource overhead.
-                    </p>
-                </div>
-            </div>
-        </section>
+  </main>
 
-        <section id="team" class="text-center pt-10 border-t border-zinc-900">
-            <h2 class="text-[10px] font-black text-zinc-600 uppercase tracking-[0.5em] mb-12">Developed By</h2>
-            <div class="flex flex-wrap justify-center gap-10">
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-zinc-700">
-                    <p class="text-[9px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">Developer</p>
-                    <p class="font-black text-xl text-white">Yash</p>
-                   
-                </div>
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-zinc-700">
-                    <p class="text-[9px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">Developer</p>
-                    <p class="font-black text-xl text-white">Karthikey</p>
-                </div>
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-zinc-700">
-                    <p class="text-[9px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">Developer</p>
-                    <p class="font-black text-xl text-white">Rakshat</p>
-                </div>
-            </div>
-        </section>
-    </main>
+  <footer class="border-t border-slate-800 py-12 text-center bg-slate-950/50">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="mono text-[11px] uppercase tracking-[0.3em] text-slate-500">SimuCli • Open Source 2026</p>
+      <div class="flex justify-center gap-6 mt-6 mono text-xs text-slate-400">
+        <a href="https://github.com/Yashb404/Simu-CLI" class="hover:text-white">Repository</a>
+        <a href="#" class="hover:text-white">Documentation</a>
+        <a href="#" class="hover:text-white">Community</a>
+      </div>
+    </div>
+  </footer>
 
-    <footer class="py-12 text-center bg-black border-t border-zinc-900">
-        <p class="text-zinc-600 text-[10px] font-bold tracking-[0.3em] uppercase mb-2">Manipal University Jaipur</p>
-        <p class="text-zinc-500 text-[9px] font-medium tracking-[0.2em] uppercase opacity-50">Department of Computer Science & Engineering • 2026</p>
-    </footer>
-
-    <script>
-
-        // RESULTS CHART (Data adapted to project)
-        const ctx = document.getElementById('resultsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Local Setup (Manual)', 'Codespaces (VM)', 'TryCli (Container)'],
-                datasets: [{
-                    label: 'Time to Hello World (Seconds)',
-                    data: [180, 45, 0.5], // Illustrative data: 3 mins, 45s, 0.5s
-                    backgroundColor: ['#27272a', '#52525b', '#22c55e'],
-                    borderRadius: 10,
-                    barThickness: 40
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { 
-                        beginAtZero: true, 
-                        grid: { color: '#ffffff05' }, 
-                        ticks: { color: '#71717a' },
-                        title: { display: true, text: 'Time (Seconds)', color: '#52525b' }
-                    }, 
-                    x: { 
-                        grid: { display: false }, 
-                        ticks: { color: '#a1a1aa' } 
-                    } 
-                }
-            }
-        });
-    </script>
+  <script>
+    const ctx = document.getElementById("impactChart").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Manual Setup", "Cloud IDE", "SimuCli Demo"],
+        datasets: [{
+          data: [18, 7, 1.2],
+          backgroundColor: ["#475569", "#f59e0b", "#22d3ee"],
+          borderRadius: 12,
+          barThickness: 50,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: "rgba(148, 163, 184, 0.08)" },
+            ticks: { color: "#94a3b8", font: { family: 'DM Mono' } },
+            title: { display: true, text: "Minutes to Success", color: "#64748b", font: { family: 'Space Grotesk' } }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: "#cbd5e1", font: { family: 'Space Grotesk', weight: 'bold' } }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
